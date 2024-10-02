@@ -1,0 +1,12 @@
+apiVersion: v1  
+kind: Service  
+metadata:  
+  name: techappservice  
+spec:  
+  type: NodePort  # Corrected 'tyep' to 'type'  
+  selector:  
+    type: webserver  
+  ports:  
+    - port: 80  
+      targetPort: 8080  # Corrected 'targetport' to 'targetPort'  
+      nodePort: 30018
