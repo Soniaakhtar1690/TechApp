@@ -1,0 +1,17 @@
+apiVersion: apps/v1  
+kind: Deployment  
+metadata:  
+  name: techappdeployment    
+spec:  
+  replicas: 3  # Desired number of pod replicas  
+  selector:  
+    matchLabels:  
+      type: webserver  
+  template:  
+    metadata:  
+      labels:  
+        type: webserver  
+    spec:  
+      containers:  
+      - name:  container1
+        image: sonia1690/abc-techapp:lts  # Define the Docker image to use 
