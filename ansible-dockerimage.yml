@@ -1,0 +1,28 @@
+---  
+- name: Create Docker image and container  
+  hosts: all  
+  become: true  
+
+  tasks:  
+    - name: Remove unwanted Docker images  
+      docker_image:  
+        name: abc-techapp-image  
+        state: absent  
+      ignore_errors: yes  
+
+    - name: Build Docker image  
+      docker_image:  
+        name: abc-techapp-image  
+        tag: lts  
+        source: build  
+        build:  
+          path: /opt/docker/  # Directory containing your Dockerfile  
+        state: present  
+
+    - name: Create and Run Docker container  
+      docker_container:  
+        name: techapp_container  
+        image: abc-techapp-image:lts  # Specify the tag for the image  
+        state: started  
+        published_ports:  
+          - "80:80"
