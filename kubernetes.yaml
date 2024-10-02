@@ -1,0 +1,54 @@
+---
+- name: Deploy Retail App on Kubernetes
+  hosts: '{{ host }}'  # Specify the host where kubectl is configured
+  tasks:
+    # Create a test namespace on the cluster without any manifest files.
+    - name: "Create a k8s namespace"
+      k8s:
+        name: retail
+        api_version: v1
+        kind: Namespace
+        state: present
+
+    # Copying the Service.yaml and deployment.yaml in the remote node.
+    - name: "Copying deployment.yaml file"
+      copy:
+        src: ../k8s/deployment.yaml
+        dest: /tmp/deployment.yaml
+
+    - name: "Copying service.yaml file"
+      copy:
+        src: ../k8s/service.yaml
+        dest: /tmp/service.yaml
+
+    # Creating a Kubernetes deployment in test using file stored locally
+    - name: "Create a deployment"
+      k8s:
+        state: present
+        namespace: retail
+        src: /tmp/deployment.yaml
+
+    # Creating a Kubernetes service in retail using file stored on local.
+    - name: "Create a Service"
+      k8s:
+        state: present
+        namespace: retail
+        src: /tmp/service.yaml
+
+    # Checking if the Kubernetes service are running on the cluster.
+    - name: "Status of the service"
+      k8s:
+        api_version: v1
+        kind: Service
+        name: retailappdeployment
+        namespace: retail
+      register: web_service
+
+    # CleanUP all the applied configurations
+    - name: "Ansible file module to delete multiple files"
+      file:
+        path: "{{ item }}"
+        state: absent   # to delete the files
+      with_items:
+        - /tmp/deployment.yaml
+        - /tmp/service.yaml
