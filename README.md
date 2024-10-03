@@ -13,3 +13,5 @@ sc.yaml: I used this yaml file to create a storage class in the k8s cluster whic
 techappDeployment.yml: I used this manifest file in my k8s server to deploy my application.
 
 techappService.yaml: I used this manifest file in the k8s server to expose my application as a service.
+
+Sonia-Purdue Project.pdf: The complete documentation of each step of this project is compiled in this file.
